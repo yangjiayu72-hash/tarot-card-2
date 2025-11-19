@@ -7,7 +7,48 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <!-- Deck Selection Screen -->
+    <div class="deck-selection-screen" id="deckSelectionScreen">
+        <div class="selection-container">
+            <h1 class="selection-title">Choose Your Tarot Deck</h1>
+            <p class="selection-subtitle">Select the deck that speaks to your spirit</p>
+
+            <div class="deck-options">
+                <div class="deck-option" data-deck="pink">
+                    <div class="deck-preview pink-deck">
+                        <div class="preview-card">
+                            <div class="preview-symbol">✦</div>
+                        </div>
+                    </div>
+                    <h3 class="deck-name">Rose Dreams</h3>
+                    <p class="deck-description">For matters of the heart and gentle guidance</p>
+                </div>
+
+                <div class="deck-option" data-deck="blue">
+                    <div class="deck-preview blue-deck">
+                        <div class="preview-card">
+                            <div class="preview-symbol">✦</div>
+                        </div>
+                    </div>
+                    <h3 class="deck-name">Ocean Wisdom</h3>
+                    <p class="deck-description">For clarity, intuition, and deep insight</p>
+                </div>
+
+                <div class="deck-option" data-deck="green">
+                    <div class="deck-preview green-deck">
+                        <div class="preview-card">
+                            <div class="preview-symbol">✦</div>
+                        </div>
+                    </div>
+                    <h3 class="deck-name">Forest Mysteries</h3>
+                    <p class="deck-description">For growth, renewal, and natural wisdom</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game Container -->
+    <div class="container" id="gameContainer" style="display: none;">
         <header>
             <h1>Digital Tarot Reading</h1>
             <p class="subtitle">Discover your journey through Past, Present, and Future</p>

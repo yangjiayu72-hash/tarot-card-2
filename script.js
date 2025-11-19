@@ -54,6 +54,7 @@ let slots = {
 let swapMode = false;
 let firstSwapCard = null;
 let usedCardIds = new Set();
+let selectedDeck = null;
 
 // Audio Context for sound effects
 let audioContext;
@@ -61,9 +62,52 @@ let audioContext;
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     initAudio();
-    createDeck();
-    setupSwapControls();
+    setupDeckSelection();
 });
+
+// Setup Deck Selection
+function setupDeckSelection() {
+    const deckOptions = document.querySelectorAll('.deck-option');
+
+    deckOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const deckType = option.dataset.deck;
+            selectDeck(deckType);
+        });
+    });
+}
+
+// Select a deck and start the game
+function selectDeck(deckType) {
+    selectedDeck = deckType;
+
+    // Apply theme to body
+    document.body.className = `theme-${deckType}`;
+
+    // Play selection sound
+    playSelectionSound();
+
+    // Fade out selection screen
+    const selectionScreen = document.getElementById('deckSelectionScreen');
+    selectionScreen.classList.add('fade-out');
+
+    // Show game container after fade out
+    setTimeout(() => {
+        selectionScreen.style.display = 'none';
+        const gameContainer = document.getElementById('gameContainer');
+        gameContainer.style.display = 'block';
+
+        // Initialize game
+        createDeck();
+        setupSwapControls();
+
+        // Animate game container in
+        setTimeout(() => {
+            gameContainer.style.opacity = '0';
+            gameContainer.style.animation = 'fadeIn 1s ease-out forwards';
+        }, 50);
+    }, 800);
+}
 
 // Initialize Audio Context
 function initAudio() {
@@ -474,6 +518,25 @@ function playSwapSound() {
 
     oscillator.start(audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + 0.3);
+}
+
+function playSelectionSound() {
+    if (!audioContext) return;
+
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(500, audioContext.currentTime + 0.4);
+
+    gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
 }
 
 // Visual Effects
