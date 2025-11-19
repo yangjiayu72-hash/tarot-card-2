@@ -1,0 +1,414 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #e0e0e0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(138, 96, 184, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 1;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+    font-size: 3em;
+    color: #d4af37;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    margin-bottom: 10px;
+    letter-spacing: 3px;
+}
+
+.subtitle {
+    color: #b8b8b8;
+    font-size: 1.1em;
+    font-style: italic;
+}
+
+/* Slots Container */
+.slots-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+}
+
+.slot {
+    text-align: center;
+}
+
+.slot-label {
+    font-size: 1.3em;
+    color: #d4af37;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.slot-area {
+    width: 180px;
+    height: 280px;
+    border: 3px dashed rgba(212, 175, 55, 0.4);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.slot-area.drag-over {
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+    transform: scale(1.05);
+}
+
+.slot-area.filled {
+    border-style: solid;
+    border-color: #d4af37;
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.5);
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.6); }
+}
+
+/* Cards */
+.card {
+    width: 160px;
+    height: 250px;
+    position: relative;
+    cursor: grab;
+    transition: transform 0.3s ease;
+    transform-style: preserve-3d;
+    margin: 10px;
+}
+
+.card:active {
+    cursor: grabbing;
+}
+
+.card:hover:not(.placed) {
+    transform: translateY(-10px) scale(1.05);
+}
+
+.card.flipping {
+    animation: flipCard 0.8s ease-in-out;
+}
+
+@keyframes flipCard {
+    0% { transform: rotateY(0deg); }
+    50% { transform: rotateY(90deg); }
+    100% { transform: rotateY(180deg); }
+}
+
+.card.placed {
+    cursor: pointer;
+    transform: rotateY(180deg);
+}
+
+.card.swapping {
+    animation: swapFlash 0.5s ease-in-out;
+}
+
+@keyframes swapFlash {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(2) drop-shadow(0 0 20px rgba(212, 175, 55, 1)); }
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.card-back {
+    background: linear-gradient(135deg, #2c003e 0%, #4a0e4e 100%);
+    border: 2px solid #d4af37;
+}
+
+.card-back::before {
+    content: '✦';
+    font-size: 4em;
+    color: #d4af37;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+}
+
+.card-front {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+    border: 2px solid #d4af37;
+    transform: rotateY(180deg);
+}
+
+.card-symbol {
+    font-size: 3em;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.6));
+}
+
+.card-name {
+    font-size: 1.1em;
+    color: #d4af37;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 0.85em;
+    color: #c0c0c0;
+    text-align: center;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+/* Deck Container */
+.deck-container {
+    text-align: center;
+    margin-top: 60px;
+}
+
+.instruction {
+    color: #b8b8b8;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.deck {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    animation: fadeIn 1.5s ease-out 0.5s backwards;
+}
+
+/* Result Panel */
+.result-panel {
+    background: rgba(26, 26, 46, 0.8);
+    border: 2px solid #d4af37;
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 40px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.result-panel.visible {
+    opacity: 1;
+    transform: translateY(0);
+    animation: resultGlow 1s ease-out;
+}
+
+@keyframes resultGlow {
+    0% { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+    50% { box-shadow: 0 0 60px rgba(212, 175, 55, 0.8); }
+    100% { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+}
+
+.result-panel h2 {
+    color: #d4af37;
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.selected-cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.selected-card-item {
+    text-align: center;
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.selected-card-item:nth-child(1) { animation-delay: 0.1s; }
+.selected-card-item:nth-child(2) { animation-delay: 0.2s; }
+.selected-card-item:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.selected-card-symbol {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.selected-card-name {
+    color: #d4af37;
+    font-size: 1em;
+}
+
+.fate-sentence {
+    background: rgba(212, 175, 55, 0.1);
+    border-left: 4px solid #d4af37;
+    padding: 30px;
+    font-size: 1.3em;
+    line-height: 1.8;
+    color: #e8e8e8;
+    font-style: italic;
+    text-align: center;
+    border-radius: 8px;
+    animation: fadeInUp 0.8s ease-out 0.4s backwards;
+}
+
+/* Swap Controls */
+.swap-controls {
+    text-align: center;
+    margin-top: 30px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.swap-controls.visible {
+    opacity: 1;
+}
+
+.swap-btn {
+    background: linear-gradient(135deg, #4a0e4e 0%, #2c003e 100%);
+    border: 2px solid #d4af37;
+    color: #d4af37;
+    padding: 15px 40px;
+    font-size: 1.1em;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Georgia', serif;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.swap-btn:hover {
+    background: linear-gradient(135deg, #6a1e6e 0%, #4c204e 100%);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
+    transform: translateY(-2px);
+}
+
+.swap-btn:active {
+    transform: translateY(0);
+}
+
+.swap-btn.active {
+    background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+    color: #1a1a2e;
+    animation: btnPulse 1s ease-in-out infinite;
+}
+
+@keyframes btnPulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+    50% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.8); }
+}
+
+.swap-instruction {
+    margin-top: 15px;
+    color: #d4af37;
+    font-size: 1em;
+    font-style: italic;
+}
+
+/* Theme Colors */
+.result-panel.warm {
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(184, 134, 11, 0.2) 100%);
+}
+
+.result-panel.cool {
+    background: linear-gradient(135deg, rgba(25, 25, 112, 0.3) 0%, rgba(70, 130, 180, 0.2) 100%);
+}
+
+.result-panel.mysterious {
+    background: linear-gradient(135deg, rgba(75, 0, 130, 0.3) 0%, rgba(138, 43, 226, 0.2) 100%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2em;
+    }
+
+    .slots-container {
+        gap: 20px;
+    }
+
+    .slot-area {
+        width: 140px;
+        height: 220px;
+    }
+
+    .card {
+        width: 120px;
+        height: 190px;
+    }
+
+    .result-panel {
+        padding: 20px;
+    }
+
+    .fate-sentence {
+        font-size: 1.1em;
+    }
+}
