@@ -98,6 +98,7 @@ function selectDeck(deckType) {
         gameContainer.style.display = 'block';
 
         // Initialize game
+        setupSlotAreas();
         createDeck();
         setupSwapControls();
 
@@ -190,7 +191,7 @@ function handleDragEnd(e) {
 }
 
 // Setup slot areas for drag and drop
-document.addEventListener('DOMContentLoaded', () => {
+function setupSlotAreas() {
     const slotAreas = document.querySelectorAll('.slot-area');
 
     slotAreas.forEach(area => {
@@ -198,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         area.addEventListener('dragleave', handleDragLeave);
         area.addEventListener('drop', handleDrop);
     });
-});
+}
 
 function handleDragOver(e) {
     if (e.preventDefault) {
@@ -215,6 +216,10 @@ function handleDragLeave(e) {
 }
 
 function handleDrop(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+
     if (e.stopPropagation) {
         e.stopPropagation();
     }
